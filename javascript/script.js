@@ -147,17 +147,27 @@ function printPage() {
 
 // Funzione per mettere like al post
 function likeFunction() {
-    // aggiungo la classe per il testo verde
-    this.classList.add("like-button--liked");
     // salvo l'id del post
     const index = parseInt(this.getAttribute("data-postid"));
-    // incremento il numero di like
-    posts[index - 1].likes += +1;
-    // stampo il nuovo numero di like all'id corrispondente
+    // salvo l'elemento di output corrispondente
     const b = document.getElementById(`like-counter-${index}`);
-    b.innerHTML = posts[index - 1].likes;
-    // rimuovo la possibilità di cliccare il like
-    this.removeEventListener("click", likeFunction);
-    // salvo nell'array l'id del post piaciuto
-    liked_posts.push(index);
+    if(this.getAttribute("class") == "like-button js-like-button") {
+        // aggiungo la classe per il testo verde
+        this.classList.add("like-button--liked");
+        // incremento il numero di like
+        posts[index - 1].likes++;
+        // stampo il nuovo numero di like
+        b.innerHTML = posts[index - 1].likes;
+        // salvo nell'array l'id del post piaciuto
+        liked_posts.push(index);
+    } else {
+        // rimuovo la classe per il testo verde
+        this.classList.remove("like-button--liked");
+        // decremento il numero di like
+        posts[index - 1].likes--;
+        // stampo il nuovo numero di like
+        b.innerHTML = posts[index - 1].likes;
+        // rimuovo dall'array l'id del post
+        liked_posts.splice(liked_posts.indexOf(index) , 1);
+    }
 };

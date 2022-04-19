@@ -122,7 +122,6 @@ h1 {
 
 .like-button--liked {
     color: #0CD977;
-    cursor: default;
 }
 .fallback{
     text-align: center;
