@@ -55,6 +55,8 @@ const posts = [
         "created": "2021-03-05"
     }
 ];
+// Array post piaciuti
+let liked_posts = [];
 
 printPage();
 
@@ -94,22 +96,51 @@ function printPage() {
             <img src="${element.media}" alt="${element.author.name}'s media">
         `;
         // inserimento dati nel footer del post
-        post__footer.innerHTML = `
-            <div class="likes js-likes">
-                <div class="likes__cta">
-                    <a class="like-button  js-like-button" href="#" data-postid="${element.id}">
-                        <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
-                        <span class="like-button__label">Mi Piace</span>
-                    </a>
-                </div>
-                <div class="likes__counter">
-                    Piace a <b id="like-counter-1" class="js-likes-counter">${element.likes}</b> persone
-                </div>
-            </div> 
+            // creo la sezione dei like
+        const likes_sec = document.createElement("div");
+        likes_sec.setAttribute("class", "likes js-likes");
+        const likes__cta = document.createElement("div");
+        likes__cta.setAttribute("class", "likes__cta");
+        const a = document.createElement("a");
+        a.setAttribute("class", "like-button js-like-button");
+        a.setAttribute("data-postid", element.id);
+        a.innerHTML = `
+            <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
+            <span class="like-button__label">Mi Piace</span>
         `;
+        likes__cta.append(a);
+        likes_sec.append(likes__cta);
+        likes_sec.innerHTML += `
+            <div class="likes__counter">
+                Piace a <b id="like-counter-${element.id}" class="js-likes-counter">${element.likes}</b> persone
+            </div>
+        `;
+        post__footer.append(likes_sec);
         // aggancio tutte le sezioni al post
         post.append(post__header, post__text, post__image, post__footer);
         // aggancio il post al container
         container.append(post);
     });
-}
+    // creo un array con i pulsanti cliccabili
+    like_buttons = document.querySelectorAll(".like-button");
+    like_buttons.forEach(element => {
+        element.addEventListener("click", likeFunction);
+    });
+};
+
+// Funzione per mettere like al post
+function likeFunction() {
+    // aggiungo la classe per il testo verde
+    this.classList.add("like-button--liked");
+    // salvo l'id del post
+    const index = parseInt(this.getAttribute("data-postid"));
+    // incremento il numero di like
+    posts[index - 1].likes += +1;
+    // stampo il nuovo numero di like all'id corrispondente
+    const b = document.getElementById(`like-counter-${index}`);
+    b.innerHTML = posts[index - 1].likes;
+    // rimuovo la possibilità di cliccare il like
+    this.removeEventListener("click", likeFunction);
+    // salvo nell'array l'id del post piaciuto
+    liked_posts.push(index);
+};
