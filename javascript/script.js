@@ -78,7 +78,23 @@ function printPage() {
         const post__footer = document.createElement("div")
         post__footer.setAttribute("class", "post__footer");
         // inserimento dati nell'intestazione del post
-        post__header.innerHTML = `
+        if(element.author.image == null) {
+            post__header.innerHTML = `
+            <div class="post-meta">                    
+                <div class="post-meta__icon">
+                    <div class="fallback">
+                        ${element.author.name.split(" ")[0].charAt(0)}
+                        ${element.author.name.split(" ")[1].charAt(0)}
+                    </div>                    
+                </div>
+                <div class="post-meta__data">
+                    <div class="post-meta__author">${element.author.name}</div>
+                    <div class="post-meta__time">4 mesi fa</div>
+                </div>                    
+            </div>
+        `;
+        } else {
+            post__header.innerHTML = `
             <div class="post-meta">                    
                 <div class="post-meta__icon">
                     <img class="profile-pic" src="${element.author.image}" alt="${element.author.name}">                    
@@ -89,6 +105,7 @@ function printPage() {
                 </div>                    
             </div>
         `;
+        }
         // inserimento contenuto del post
         post__text.innerHTML = element.content;
         // inserimento immagine del post
